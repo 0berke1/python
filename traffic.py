@@ -1,65 +1,95 @@
 import math
 
+list = []
+cars_quantitiy_list = []
+
 #global variables. User inputs.
 global SPEED_LIMIT
-global CAPACITY_A
-global CAPACITY_B
+global NUMBER_OF_ROADS
 global NUMBER_OF_PEOPLE
-global NUMBER_OF_ROADS 
 
 def main():
+    while True:
+        try:
+            #speed limit
+            global SPEED_LIMIT                                                                        
+            SPEED_LIMIT = int(input("enter the speed limit:")) 
 
-    print("welcome to traffic calculator. There are two types of cars : Model A and model B") # print welcome message.
+            #number of roads
+            global NUMBER_OF_ROADS
+            NUMBER_OF_ROADS = int(input("enter the number of roads:"))
 
-    #get the capacitiy of the models 
-    global CAPACITY_A 
-    CAPACITY_A = int(input("enter capacity for model A cars:"))                             
+            print(f"models go at the speed of {SPEED_LIMIT} when there're no more than 10 cars on a single road.")
 
-    global CAPACITY_B
-    CAPACITY_B = int(input("enter capacity for model B cars:")) 
+            #number of people
+            global NUMBER_OF_PEOPLE
+            NUMBER_OF_PEOPLE = int(input("how many people will be on the road? "))
 
-    #speed limit                                                                                     
-    global SPEED_LIMIT 
-    SPEED_LIMIT = int(input("enter the speed limit:")) 
+            while True:
+                try:
 
-    #number of roads
-    global NUMBER_OF_ROADS
-    NUMBER_OF_ROADS = int(input("enter the number of roads:"))                                      
+                    model_name = input("enter model name: ")
+                    model_capacity = int(input(f"enter model capacity for {model_name}: "))
 
-    print(f"both models go at the speed of {SPEED_LIMIT} when there're no more than 10 cars on a single road.")
+                    if not {"name":model_name, "capacity":model_capacity} in list:
+                        list.append({"name" : model_name , "capacity" : model_capacity})
+                    else:
+                        print("model already exists.")
+                        continue
 
-    #number of people
-    global NUMBER_OF_PEOPLE
-    NUMBER_OF_PEOPLE = int(input("how many people will be on the road? "))
+                except EOFError:
+                    break
 
-    numberofcarsA, numberofcarsB = numberofcars(NUMBER_OF_PEOPLE) #calculate how many cars are needed for each model to carry the given number of people.
+            while True:
+                try:
 
-    model = input("choose a model, A or B ").capitalize()  #user chooses a model. Speed gets updated for the chosen model and returned.
-
-    if model == "A":
-        speed = speedofcars(numberofcarsA)
-        print(f"{numberofcarsA} model A cars are needed to carry {NUMBER_OF_PEOPLE} people.")
-
-
-    elif model =="B":
-        speed = speedofcars(numberofcarsB)
-        print(f"{numberofcarsB} model B cars are needed to carry {NUMBER_OF_PEOPLE} people.")
-
-
-    print(f"the cars has to go at the speed {speed}. They have to slow down {SPEED_LIMIT - speed}. ")  #new speed limit is shown to the screen.
+                    key_input = input("press L to list the models. Press C to calculate speed.").capitalize()
 
 
+                    if key_input == "L":
+                        print("model" , "  capacity ")
 
-#define the function that calculates how many cars of model A and model B are needed to transport a given number of people.
-def numberofcars(number_of_people):
+                        for i in range(len(list)):
+                            print(list[i]["name"] , " " , list[i]["capacity"])
 
-    number_of_cars_A= number_of_people / CAPACITY_A
-    number_of_cars_B = number_of_people / CAPACITY_B
+                    elif key_input == "C":
+                        cars_quantitiy_list = numberofcars()
 
-    return math.ceil(number_of_cars_A), math.ceil(number_of_cars_B)
+                        print(f"number of cars needed to carry {NUMBER_OF_PEOPLE} people for each model:")
+                        for i in range(len(list)):
+                            print(list[i]["name"] , " " , cars_quantitiy_list[i])
+
+                        model_input = input("choose a model to calculate speed: ")
+
+                        for i in range(len(list)):
+                            if list[i]["name"] == model_input:
+                                speed = speedofcars(cars_quantitiy_list[i])
+                                break
+                        
+                        print(f"the cars has to go at the speed {speed}. They have to slow down {SPEED_LIMIT - speed}. ")  #new speed limit is shown to the screen.
+
+                except EOFError:
+                    break
+
+        except EOFError:
+            break
+        
 
 
-#define the function that calculates the speed of which the cars on the road has to go given the number of cars
+
+
+
+def numberofcars():
+
+    local_list = []
+
+    for i in range(len(list)):
+        local_list.append(math.ceil(NUMBER_OF_PEOPLE / int(list[i]["capacity"])))
+
+    return local_list
+
+ 
+
 def speedofcars(number_of_cars):
 
     change_of_speed = 2 #this variable determines the change ratio of the max speed per car.
@@ -70,5 +100,11 @@ def speedofcars(number_of_cars):
         speed = SPEED_LIMIT - change_of_speed * (number_of_cars - 10 * NUMBER_OF_ROADS)
 
     return speed
+
+
+
+
+
+
 
 main()
