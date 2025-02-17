@@ -13,10 +13,10 @@ def main():
 
         draw(row, column, sign)
 
-
-
-
-
+        if check(row, column, sign):
+            print("won")
+        else:
+            continue
 
 
 
@@ -73,8 +73,55 @@ def draw(r, c, s):
                 cell_iterator += 1
 
 
+def check(r, c, s):
 
-main()
+    global list
+    length = int(math.sqrt(len(list)))
+
+    i = list.index({"row": r, "column": c, "sign": s})
+
+    if i >= 0 and i <= length - 1:
+        for r in range(length - 1):
+            if(list[r]["sign"] == list[r+1]["sign"] == s):
+                continue
+            else:
+                col = i
+                for c in range(length - 1):
+                    if(list[col]["sign"] == list[col+length]["sign"] == s):
+                        col = col + length
+                        continue
+                    else:
+                        return False
+        return True
+
+            
+    elif i >= length and i <= (2*length - 1):
+        for r in range(length, 2*length - 1):
+            if(list[r]["sign"] == list[r+1]["sign"] == s):
+                continue
+            else:
+                col = i - length
+                for c in range(length - 1):
+                    if(list[col]["sign"] == list[col+length]["sign"] == s):
+                        col = col + length
+                        continue
+                    else:
+                        return False
+        return True
+
+    elif i >= 2*length and i <= 3*length - 1:
+        for r in range(2*length, 3*length - 1):
+            if(list[r]["sign"] == list[r+1]["sign"] == s):
+                continue
+            else:
+                col = i - 2*length
+                for c in range(length - 1):
+                    if(list[col]["sign"] == list[col+length]["sign"] == s):
+                        col = col + length
+                        continue
+                    else:
+                        return False
+        return True
 
 
 
