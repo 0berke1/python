@@ -1,8 +1,24 @@
 import csv
 
+def get_category():
+    while True:
+        categories = ["math", "solar system", "sports", "games"]
+
+        for c in categories:
+            print("> "+c)
+
+        choice = input("enter a category: ").lower()
+
+        if choice not in categories:
+            continue
+        else:
+
+            return choice.replace(" ", "").strip()
+
+
 def load_questions(filename):
     questions = []
-    with open("questions.csv", mode='r') as file:
+    with open(f"{filename}.csv", mode='r') as file:
         reader = csv.DictReader(file)
         for row in reader:
             questions.append(row)
@@ -25,5 +41,7 @@ def run_quiz(questions):
     print(f"Quiz finished! Your score is {score}/{len(questions)}.")
 
 if __name__ == "__main__":
-    questions = load_questions("quiz_questions.csv")
+
+    category = get_category()
+    questions = load_questions(category)
     run_quiz(questions)
