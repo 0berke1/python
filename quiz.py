@@ -1,8 +1,9 @@
 import csv
+import random
 
 def get_category():
     while True:
-        categories = ["math", "solar system", "sports", "games"]
+        categories = ["math", "solar system", "sports", "games", "random"]
 
         for c in categories:
             print("> "+c)
@@ -11,9 +12,10 @@ def get_category():
 
         if choice not in categories:
             continue
-        else:
-
+        elif choice == "solar system":
             return choice.replace(" ", "").strip()
+        else:
+            return choice
 
 
 def load_questions(filename):
@@ -24,8 +26,29 @@ def load_questions(filename):
             questions.append(row)
     return questions
 
+def load_random():
+    questions = []
+    files = ["games.csv", "math.csv", "solarsystem.csv", "sports.csv"]
+
+    for f in files:
+        question_number = random.randint(1,4)
+        with open(f,"r") as csvfile:
+            read_questions = list(csv.DictReader(csvfile))
+            while question_number > 0:
+                to_be_appended = read_questions[random.randint(0, 9)]
+
+                if to_be_appended not in questions:
+                    questions.append(to_be_appended)
+                    question_number -= 1
+                else:
+                    continue
+    return questions
+
+
 def run_quiz(questions):
     score = 0
+    random.shuffle(questions)
+
     for question in questions:
         print(question['Question'])
         print(f"A: {question['Option A']}")
@@ -43,5 +66,10 @@ def run_quiz(questions):
 if __name__ == "__main__":
 
     category = get_category()
-    questions = load_questions(category)
-    run_quiz(questions)
+
+    if category == "random":
+        questions = load_random()
+        run_quiz(questions)
+    else:
+        questions = load_questions(category)
+        run_quiz(questions)
